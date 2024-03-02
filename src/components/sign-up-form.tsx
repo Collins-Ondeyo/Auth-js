@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { Signup } from "@/actions/sign-up";
+
+import { FormMessage } from "./form-message";
 import { Input } from "./Input-Field";
 
 export const SignUpForm = () => {
@@ -40,6 +42,8 @@ export const SignUpForm = () => {
                 placeholder="password"
                 type="password"
             />
+
+            <FormMessage messageObject={ {success:true, message:"valid input"} } />
 
             <button
                 className="bg-black text-white rounded-md py-1 cursor-pointer font-semibold"

@@ -5,7 +5,7 @@ import { SignInSchema } from "@/schemas";
 
 import bcryptjs from "bcryptjs";
 
-export default {
+export default {         
     pages: {
         signIn:"/signin",
         error:"/error"

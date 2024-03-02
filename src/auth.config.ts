@@ -6,10 +6,13 @@ import { SignInSchema } from "@/schemas";
 import bcryptjs from "bcryptjs";
 
 export default {
+    pages: {
+        error:"/error"
+    },
     providers: [
         Credentials({
             async authorize(credentials) {
-                const validFields = SignInSchema.safeParse(credentials)
+                const validFields = await SignInSchema.safeParse(credentials)
                 if (validFields.success) {                    
                     const user = await getUserByEmail(validFields.data.email);
                     if (!user || !user.password) return null
@@ -18,8 +21,8 @@ export default {
                     
                     const { password, ...restUserData } = user;
                     return restUserData;
-                }
-                return null;
+                }                    
+                return null
             }
         })
     ]

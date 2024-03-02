@@ -2,6 +2,8 @@ import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { prisma } from "@/lib/prisma";
+
 export const cn = (...inputs: ClassValue[]) => {
     return twMerge(clsx(...inputs))
 }
@@ -17,3 +19,7 @@ export const CreateFormMessage = (messageObject: {
 }
 
 
+export const getUserByEmail = async (email:string) => {
+    const user = await prisma.user.findFirst({ where: { email } });
+    return user;
+}

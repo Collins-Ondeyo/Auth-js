@@ -12,6 +12,7 @@ import { FormMessage } from "./form-message";
 import { Input } from "./Input-Field";
 import { useState } from "react";
 import { CreateFormMessage } from "@/utils";
+import Link from "next/link";
 
 export const SignUpForm = () => {
     const [formMessage, setFormMessage] = useState<ReturnType<typeof CreateFormMessage> | undefined>(undefined);
@@ -63,6 +64,13 @@ export const SignUpForm = () => {
             >
                 {isSubmitting ? "Submitting..." : "Submit"}
             </button>
+
+            <Link
+                className="text-center text-sm text-[blue] underline cursor-pointer"
+                href={"/signin"}
+            >
+                already signed up
+            </Link>
         </form>
     )
 }

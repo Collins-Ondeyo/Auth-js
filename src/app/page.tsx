@@ -9,6 +9,11 @@ export default function Home() {
         href={"/signup"}>
         Sign Up
       </Link>
+      <Link
+        className="bg-black text-white px-3 py-1 rounded-sm font-semibold curosor-pointer"
+        href={"/signin"}>
+        Sign In
+      </Link>
       
     </div>
   );

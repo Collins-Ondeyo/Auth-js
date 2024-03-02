@@ -3,6 +3,8 @@
 import { SignUpSchema, SignUpSchemaTypes } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
+
+import { Signup } from "@/actions/sign-up";
 import { Input } from "./Input-Field";
 
 export const SignUpForm = () => {
@@ -11,7 +13,7 @@ export const SignUpForm = () => {
     });
 
     const onSubmit: SubmitHandler<SignUpSchemaTypes> = (data) => {
-        console.log(data)
+        Signup(data)
     }
     return (
         <form

@@ -1,13 +1,13 @@
 "use client"
 
 import {useForm, SubmitHandler} from "react-hook-form"
-
+import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
+import { useState, useTransition } from "react"
+
 import { Input } from "./Input-Field"
 import { SignInSchema, SignInSchemaTypes } from "@/schemas"
-import { useState, useTransition } from "react"
 import { CreateFormMessage } from "@/utils"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { SignInUser } from "@/actions/sign-in"
 import { FormMessage } from "./form-message"
 
@@ -19,6 +19,7 @@ export const SignInForm = () => {
         resolver: zodResolver(SignInSchema)
     });
     const onSubmit: SubmitHandler<SignInSchemaTypes> = (data) => {
+        setFormMessage(undefined)
         startSubmitting(async () => {
             SignInUser(data)
                 .then(res => {

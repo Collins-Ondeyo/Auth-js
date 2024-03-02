@@ -6,8 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 export const SignUpForm = () => {
     const { register, handleSubmit } = useForm<SignUpSchemaTypes>({
-        resolver: zodResolver(SignUpSchema)
-    });
+         resolver: zodResolver(SignUpSchema) });
 
     const onSubmit: SubmitHandler<SignUpSchemaTypes> = (data) => {
         console.log(data)

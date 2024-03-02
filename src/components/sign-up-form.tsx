@@ -3,10 +3,12 @@
 import { SignUpSchema, SignUpSchemaTypes } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { Input } from "./Input-Field";
 
 export const SignUpForm = () => {
-    const { register, handleSubmit } = useForm<SignUpSchemaTypes>({
-         resolver: zodResolver(SignUpSchema) });
+    const { register, handleSubmit, formState:{errors} } = useForm<SignUpSchemaTypes>({
+        resolver: zodResolver(SignUpSchema)
+    });
 
     const onSubmit: SubmitHandler<SignUpSchemaTypes> = (data) => {
         console.log(data)
@@ -16,23 +18,25 @@ export const SignUpForm = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="bg-[---color-primary] shadow-lg border px-3 py-5 rounded overflow-hidden flex flex-col justify-center gap-3">
 
-            <input
-                {...register("name")}
-                placeholder="name"
+            <Input
+                error={errors?.name?.message}
                 type="text"
-                className="px-2 py-1 rounded-md border-[black] border-[2px] outline-none"
+                placeholder="name"
+                {...register("name")}
             />
-            <input
-                {...register("email")}
-                placeholder="email"
+
+            <Input
+                error={errors.email?.message}
                 type="email"
-                className="px-2 py-1 rounded-md border-[black] border-[2px] outline-none"
+                placeholder="email"
+                {...register("email")}
             />
-            <input
+
+            <Input
+                error={errors.password?.message}
                 {...register("password")}
                 placeholder="password"
                 type="password"
-                className="px-2 py-1 rounded-md border-[black] border-[2px] outline-none"
             />
 
             <button

@@ -22,14 +22,12 @@ export const SignUpForm = () => {
     });
 
     const onSubmit: SubmitHandler<SignUpSchemaTypes> = (data) => {
-        startSubmiting(() => {            
-            Signup(data).then(
-                res => {
-                    setFormMessage(res)
-                }
-            )
+        setFormMessage(undefined)
+        startSubmiting(async () => {
+            Signup(data)
+                .then(res=>setFormMessage(res))
         })
-    }
+    };
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}

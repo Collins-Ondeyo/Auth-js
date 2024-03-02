@@ -1,10 +1,15 @@
 "use client"
 
+import { SignUpSchema, SignUpSchemaTypes } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 export const SignUpForm = () => {
-    const { register, handleSubmit } = useForm<{ name: string; email: string; password: string; }>();
-    const onSubmit: SubmitHandler<{ name: string; email: string; password: string; }> = (data) => {
+    const { register, handleSubmit } = useForm<SignUpSchemaTypes>({
+        resolver: zodResolver(SignUpSchema)
+    });
+
+    const onSubmit: SubmitHandler<SignUpSchemaTypes> = (data) => {
         console.log(data)
     }
     return (

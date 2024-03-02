@@ -6,7 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import { useTransition } from "react";
 
-import { Signup } from "@/actions/sign-up";
+import { UserSignUp } from "@/actions/sign-up";
 
 import { FormMessage } from "./form-message";
 import { Input } from "./Input-Field";
@@ -24,7 +24,7 @@ export const SignUpForm = () => {
     const onSubmit: SubmitHandler<SignUpSchemaTypes> = (data) => {
         setFormMessage(undefined)
         startSubmiting(async () => {
-            Signup(data)
+            UserSignUp(data)
                 .then(res=>setFormMessage(res))
         })
     };

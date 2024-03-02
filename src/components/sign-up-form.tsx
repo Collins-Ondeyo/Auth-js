@@ -4,18 +4,31 @@ import { SignUpSchema, SignUpSchemaTypes } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 
+import { useTransition } from "react";
+
 import { Signup } from "@/actions/sign-up";
 
 import { FormMessage } from "./form-message";
 import { Input } from "./Input-Field";
+import { useState } from "react";
+import { CreateFormMessage } from "@/utils";
 
 export const SignUpForm = () => {
+    const [formMessage, setFormMessage] = useState<ReturnType<typeof CreateFormMessage> | undefined>(undefined);
+    const [isSubmitting, startSubmiting] = useTransition();
+
     const { register, handleSubmit, formState:{errors} } = useForm<SignUpSchemaTypes>({
         resolver: zodResolver(SignUpSchema)
     });
 
     const onSubmit: SubmitHandler<SignUpSchemaTypes> = (data) => {
-        Signup(data)
+        startSubmiting(() => {            
+            Signup(data).then(
+                res => {
+                    setFormMessage(res)
+                }
+            )
+        })
     }
     return (
         <form
@@ -23,7 +36,7 @@ export const SignUpForm = () => {
             className="bg-[---color-primary] shadow-lg border px-3 py-5 rounded overflow-hidden flex flex-col justify-center gap-3">
 
             <Input
-                error={errors?.name?.message}
+                error={errors.name?.message}
                 type="text"
                 placeholder="name"
                 {...register("name")}
@@ -43,12 +56,14 @@ export const SignUpForm = () => {
                 type="password"
             />
 
-            <FormMessage messageObject={ {success:true, message:"valid input"} } />
+            {formMessage && <FormMessage messageObject={ formMessage } />}
 
             <button
-                className="bg-black text-white rounded-md py-1 cursor-pointer font-semibold"
-                type="submit">
-                Submit
+                disabled={isSubmitting}
+                className="bg-black text-white rounded-md py-1 cursor-pointer font-semibold disabled:opacity-85 disabled:cursor-progress"
+                type="submit"
+            >
+                {isSubmitting ? "Submitting..." : "Submit"}
             </button>
         </form>
     )

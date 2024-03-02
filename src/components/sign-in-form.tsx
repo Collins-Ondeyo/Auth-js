@@ -9,7 +9,9 @@ import { Input } from "./Input-Field"
 import { SignInSchema, SignInSchemaTypes } from "@/schemas"
 import { CreateFormMessage } from "@/utils"
 import { SignInUser } from "@/actions/sign-in"
-import { FormMessage } from "./form-message"
+import { FormMessage } from "./form-message";
+
+import { useSearchParams } from "next/navigation"
 
 
 export const SignInForm = () => {
@@ -18,10 +20,17 @@ export const SignInForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<SignInSchemaTypes>({
         resolver: zodResolver(SignInSchema)
     });
+
+    const searchParams = useSearchParams()
+    const callbackUrl = () => {
+        const url = searchParams.get("callbackUrl");
+        if (!url) return undefined
+        return url
+    }
     const onSubmit: SubmitHandler<SignInSchemaTypes> = (data) => {
         setFormMessage(undefined)
         startSubmitting(async () => {
-            SignInUser(data)
+            SignInUser(data, callbackUrl())
                 .then(res => {
                     setFormMessage(res)
                 })

@@ -7,6 +7,7 @@ import bcryptjs from "bcryptjs";
 
 export default {
     pages: {
+        signIn:"/signin",
         error:"/error"
     },
     providers: [

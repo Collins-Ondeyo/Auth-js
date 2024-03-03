@@ -2,28 +2,27 @@
 
 import { signIn } from "@/auth";
 import { SignInSchemaTypes } from "@/schemas";
-import { CreateFormMessage } from "@/utils"
+import { CreateFormMessage } from "@/utils";
 import { AuthError } from "next-auth";
 
-
-export const SignInUser = async (
+export const signInUser = async (
     data: SignInSchemaTypes,
-    callbackUrl?: string
+    callbackUrl?:string
 ) => {
-    const { email, password } = data;
-    try {
-        await signIn("credentials", { email, password, redirectTo:callbackUrl || "/" });
-        return CreateFormMessage({ success: true, message: "success" });
-    } catch (err) {
-        if (err instanceof AuthError) {
-            switch (err.type) {
-                case "CredentialsSignin":
-                    return CreateFormMessage({ success: false, message: "invalid credentials" });
-                default:
-                    return CreateFormMessage({ success: false, message: "Something went wrong" });
+    const res = await signIn("credentials", { email: data.email, password: data.password, redirectTo: callbackUrl || "/" })
+        .then(() => {
+            return CreateFormMessage({ success: true, message: "success" });
+        })
+        .catch(error => {
+            if (error instanceof AuthError) {
+                switch (error.type) {
+                    case "CredentialsSignin":
+                        return CreateFormMessage({ success: false, message: "Invalid credentials" });
+                    default:
+                        return CreateFormMessage({ success: false, message: "Something went wrong" });
+                }
             }
-        }
-        
-        throw err
-    }
+            throw error
+        });
+    return res;
 }

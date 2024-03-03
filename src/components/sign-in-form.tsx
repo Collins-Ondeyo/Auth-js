@@ -4,37 +4,34 @@ import {useForm, SubmitHandler} from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { useState, useTransition } from "react"
+import { useSearchParams } from "next/navigation"
 
 import { Input } from "./Input-Field"
 import { SignInSchema, SignInSchemaTypes } from "@/schemas"
 import { CreateFormMessage } from "@/utils"
-import { SignInUser } from "@/actions/sign-in"
 import { FormMessage } from "./form-message";
+import { signInUser } from "@/actions/sign-in"
 
-import { useSearchParams } from "next/navigation"
 
 
 export const SignInForm = () => {
-    const [formMessage, setFormMessage] = useState<ReturnType<typeof CreateFormMessage> | undefined>(undefined)
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
+
+    const [formMessage, setFormMessage] = useState<ReturnType<typeof CreateFormMessage> | undefined>(undefined);
     const [isSubmitting, startSubmitting] = useTransition();
     const { register, handleSubmit, formState: { errors } } = useForm<SignInSchemaTypes>({
         resolver: zodResolver(SignInSchema)
     });
 
-    const searchParams = useSearchParams()
-    const callbackUrl = () => {
-        const url = searchParams.get("callbackUrl");
-        if (!url) return undefined
-        return url
-    }
     const onSubmit: SubmitHandler<SignInSchemaTypes> = (data) => {
         setFormMessage(undefined)
         startSubmitting(async () => {
-            SignInUser(data, callbackUrl())
-                .then(res => {
+            signInUser(data, callbackUrl)
+                .then((res) => {
                     setFormMessage(res)
                 })
-        })
+        });
     }
 
     return (

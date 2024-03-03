@@ -24,5 +24,6 @@ export const signInUser = async (
             }
             throw error
         });
+    
     return res;
 }

@@ -19,7 +19,7 @@ export const UserSignUp = async (data: SignUpSchemaTypes) => {
             data: { ...userData, password: await bcryptjs.hash(password, 10) }
         });
         const token = await generateVerificationToken(newUser.id);
-        const verificationUrl = `http://localhost:3000/activate?tokenId=${token?.token_id}`
+        const verificationUrl = `http://localhost:3000/verifyemail?tokenId=${token?.token_id}`
         await SendVerificationEmail({
             to: newUser.email!,
             subject: "verify your email address",

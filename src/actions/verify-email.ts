@@ -1,39 +1,31 @@
 "use server"
 
-import { prisma } from "@/lib/prisma";
-import { CreateFormMessage } from "@/utils";
+import { prisma } from "@/lib/prisma"
 
-const createVerificationMessage = (messageObj: {
-    success: boolean,
-    cause?: "tokenExpired" | "tokenNotFound" | "unknownError" | "nullToken";
+const createVerificationEror = (errorObject: {
+    cause: "tokenNotFound" | "expiredToken";
     message: string;
 }) => {
-    const { success, cause, message } = messageObj;
-    return {success, cause, message}
+    return { cause: errorObject.cause, message: errorObject.message };
 }
 
+const createVerificationSuccess = (message: string) => {
+    return {ok:true, message}
+}
 
-export const verifyUserEmail = async (verificationTokenId:string) => {
-    const token = await prisma.verificationToken.findFirst({
-        where: {
-            token_id:verificationTokenId
-        }
-    })
-    if (!token) return createVerificationMessage({ success: false, cause: "tokenNotFound", message: "token not found" });
-
+export const verifyEmail = async (tokenId: string) => {
+    const token = await prisma.verificationToken.findFirst({ where: { token_id: tokenId } });
+    if (!token) {
+        throw createVerificationEror({ cause: "tokenNotFound", message: "token not found in the database" });
+    }
     if (token.expires < new Date(new Date().getTime())) {
-        return createVerificationMessage({ success: false, cause: "tokenExpired", message: "the token has already expired" });
+        throw createVerificationEror({ cause: "expiredToken", message: "token has expired" });
     };
 
-    try {        
-        await prisma.user.update({
-            where: { id: token.user_id },
-            data: {
-                emailVerified: Date()
-            }
-        })
-        return createVerificationMessage({ success: true, message: "email verified" });
-    } catch (error) {
-        return createVerificationMessage({success:false, cause:"unknownError", message:"an error occured"})
-    }
-};
+    await prisma.user.update({
+        where: { id: token.user_id },
+        data: { emailVerified: Date() }
+    });
+
+    return createVerificationSuccess("email verified");
+ }
